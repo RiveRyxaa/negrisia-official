@@ -1,60 +1,54 @@
 /* =========================================
-   1. UTAMA (BACKGROUND GRID PINK & RESET)
+   1. UTAMA (RESET & BACKGROUND GRID)
 ========================================= */
-body {
-    /* 1. Warna Dasar Pink Lembut */
-    background-color: #ffe6ed;
-    
-    /* 2. Membuat Motif Grid (Garis-garis Putih) */
-    background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.6) 2px, transparent 2px), /* Garis Horizontal */
-        linear-gradient(90deg, rgba(255, 255, 255, 0.6) 2px, transparent 2px); /* Garis Vertikal */
-    
-    /* 3. Ukuran Kotak Grid (Bisa diubah, misal 30px atau 50px) */
-    background-size: 40px 40px;
-    
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+/* PENTING: Mencegah zoom-out otomatis di Android */
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* Potong apapun yang melebar ke samping */
     margin: 0;
     padding: 0;
+}
+
+body {
+    /* Background Grid Pink Aesthetic */
+    background-color: #ffe6ed;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.6) 2px, transparent 2px), 
+        linear-gradient(90deg, rgba(255, 255, 255, 0.6) 2px, transparent 2px);
+    background-size: 40px 40px; /* Ukuran kotak */
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+    /* GANTI height:100vh menjadi min-height. 
+       Ini agar di HP bisa di-scroll normal ke bawah */
+    min-height: 100vh; 
+    
     display: flex;
     justify-content: center;
-    
-    /* FIX SCROLL: Kunci tinggi layar */
-    height: 100vh; 
-    overflow: hidden; 
+    /* align-items: center; <-- Hapus ini agar di HP mulai dari atas */
     position: relative;
 }
 
-/* --- Efek "Hidup": Floating Bokeh (Opsional) --- */
-/* Saya biarkan tetap ada tapi lebih transparan agar tidak tabrakan sama Grid */
+/* =========================================
+   2. ANIMASI BOKEH (Floating Bubbles)
+========================================= */
 body::before,
 body::after {
     content: '';
-    position: fixed; 
+    position: fixed; /* Tetap fixed agar background diam saat scroll */
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    /* Ganti jadi Putih yang sangat tipis agar menyatu dengan grid */
+    /* Gradasi putih pudar agar menyatu dengan grid */
     background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
     z-index: -1; 
     filter: blur(10px);
     animation: float 15s infinite ease-in-out;
 }
-/* Lingkaran 1 */
-body::before {
-    top: -10%;
-    left: -10%;
-}
 
-/* Lingkaran 2 */
-body::after {
-    bottom: -10%;
-    right: -10%;
-    width: 250px;
-    height: 250px;
-    animation-delay: -7s;
-    background: rgba(255, 192, 203, 0.4);
-}
+body::before { top: -10%; left: -10%; }
+body::after { bottom: -10%; right: -10%; width: 250px; height: 250px; animation-delay: -7s; }
 
 @keyframes float {
     0%, 100% { transform: translate(0, 0) rotate(0deg); }
@@ -63,15 +57,16 @@ body::after {
 }
 
 /* =========================================
-   3. LAYOUT WRAPPER (UNTUK HP & PC)
+   3. LAYOUT WRAPPER & CONTAINER
 ========================================= */
 .desktop-grid-wrapper {
     width: 100%;
     display: flex;
     justify-content: center;
-    /* Pastikan wrapper mengambil tinggi penuh agar bisa di-center */
-    height: 100%;
-    align-items: center; /* Center Vertikal */
+    /* Di HP, biarkan tinggi mengikuti konten */
+    height: auto; 
+    padding-top: 20px; /* Jarak sedikit dari atas di HP */
+    padding-bottom: 20px;
 }
 
 /* Sidebar default disembunyikan (untuk HP) */
@@ -79,26 +74,16 @@ body::after {
     display: none;
 }
 
-/* =========================================
-   4. KONTAINER UTAMA (BAGIAN TENGAH)
-========================================= */
+/* KONTAINER TENGAH */
 .container {
     width: 100%;
-    max-width: 480px;
+    max-width: 480px; /* Batas lebar agar mirip aplikasi */
     padding: 20px;
     text-align: center;
     position: relative;
     z-index: 2;
-    
-    /* FIX SCROLL: Jika konten HP panjang, scroll di dalam container saja */
-    max-height: 100vh; 
-    overflow-y: auto; 
-    
-    /* Sembunyikan scrollbar agar rapi */
-    scrollbar-width: none;  /* Firefox */
-}
-.container::-webkit-scrollbar { 
-    display: none; /* Chrome/Safari */
+    /* Di HP, hapus scrollbar internal, biarkan scroll window browser */
+    overflow: visible; 
 }
 
 /* --- Styling Profil & Teks --- */
@@ -116,7 +101,7 @@ body::after {
 h1 {
     font-size: 24px;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-weight: 700;
     margin-top: 0;
 }
@@ -128,21 +113,20 @@ p {
     line-height: 1.6;
 }
 
-/* --- Styling Tombol Link --- */
+/* --- Tombol Link --- */
 .link-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 25px;
-    /* Tambahan padding bawah agar tombol terakhir tidak kepotong */
-    padding-bottom: 40px; 
+    margin-top: 20px;
+    width: 100%; /* Pastikan tombol full width di container */
 }
 
 .link-btn {
     background-color: white;
     color: black;
     text-decoration: none;
-    padding: 18px 25px;
+    padding: 16px 20px; /* Sedikit dikecilkan paddingnya biar muat di HP kecil */
     border-radius: 50px;
     border: 2px solid black;
     font-weight: 600;
@@ -154,11 +138,18 @@ p {
     align-items: center;
     opacity: 0; 
     transform: translateY(20px); 
+    
+    /* PENTING: Mencegah teks panjang merusak layout */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.link-btn:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 7px 0px rgba(0,0,0,0.8);
+.link-btn span:first-child {
+    /* Agar teks tombol tidak nabrak titik tiga */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
 }
 
 .link-btn:active {
@@ -166,58 +157,53 @@ p {
     box-shadow: 2px 3px 0px rgba(0,0,0,0.8);
 }
 
-.dots {
-    font-size: 20px;
-    color: #333;
-}
+.dots { font-size: 20px; color: #333; min-width: 20px; text-align: right; }
 
 .footer {
-    margin-top: 20px;
-    font-size: 13px;
+    margin-top: 30px;
+    font-size: 12px;
     color: #777;
     font-weight: 500;
-    padding-bottom: 20px;
 }
 
-/* --- Animasi Fade In (JS) --- */
-.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.fade-in {
-    animation: fadeInUp 0.8s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+/* --- Animasi --- */
+.visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+.fade-in { animation: fadeInUp 0.8s ease-out forwards; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 /* =======================================================
-   5. MEDIA QUERY (KHUSUS DESKTOP / LAPTOP > 992px)
+   4. MEDIA QUERY (KHUSUS DESKTOP / LAPTOP > 992px)
+   Di sini kita kembalikan layout 3 kolom & fixed height
 ======================================================= */
 @media (min-width: 992px) {
 
-    /* Mengaktifkan Grid 3 Kolom */
+    /* Kunci body hanya di desktop */
+    body {
+        height: 100vh;
+        overflow: hidden; /* Tidak ada scroll window di desktop */
+        align-items: center; /* Konten di tengah vertikal */
+    }
+
     .desktop-grid-wrapper {
         display: grid;
-        grid-template-columns: 1fr 480px 1fr; /* Kiri - Tengah - Kanan */
+        grid-template-columns: 1fr 480px 1fr;
         gap: 40px; 
         width: 90%; 
         max-width: 1200px;
+        height: 100%; /* Full height di desktop */
+        align-items: center;
+        padding: 0;
     }
 
-    /* Agar container tengah tidak full layar tingginya di desktop (biar rapi) */
+    /* Scrollbar pindah ke dalam container khusus desktop */
     .container {
-        max-height: 90vh; /* Maksimal 90% tinggi layar */
-        border-radius: 20px; /* Opsional: sedikit melengkung */
-        /* Hapus background container jika ingin transparan, 
-           atau beri background tipis jika ingin seperti kartu */
+        max-height: 90vh;
+        overflow-y: auto; 
+        scrollbar-width: none;
     }
+    .container::-webkit-scrollbar { display: none; }
 
-    /* Memunculkan Sidebar Kiri & Kanan */
+    /* Munculkan Sidebar */
     .sidebar-content {
         display: block;
         background: rgba(255, 255, 255, 0.4);
@@ -226,46 +212,14 @@ p {
         backdrop-filter: blur(10px); 
         border: 2px solid rgba(255, 255, 255, 0.6);
         box-shadow: 0 10px 30px rgba(214, 51, 132, 0.1); 
-        
-        /* Animasi masuk sidebar */
         animation: fadeInUp 1s ease-out forwards;
     }
 
-    .sidebar-content h3 {
-        margin-top: 0;
-        color: #d63384;
-        font-size: 18px;
-        margin-bottom: 15px;
-    }
-
-    .mini-gallery {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .mini-gallery img {
-        width: 100%;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        transition: transform 0.3s;
-    }
-    
-    .mini-gallery img:hover {
-        transform: scale(1.05);
-    }
-
-    .info-card ul {
-        padding-left: 20px;
-        color: #444;
-        font-size: 14px;
-    }
-    
+    .sidebar-content h3 { margin-top: 0; color: #d63384; font-size: 18px; margin-bottom: 15px; }
+    .mini-gallery { display: flex; flex-direction: column; gap: 15px; }
+    .mini-gallery img { width: 100%; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s; }
+    .mini-gallery img:hover { transform: scale(1.05); }
+    .info-card ul { padding-left: 20px; color: #444; font-size: 14px; }
     .info-card li { margin-bottom: 8px; }
-    
-    .info-card p {
-        color: #444;
-        line-height: 1.6;
-        font-size: 14px;
-    }
+    .info-card p { color: #444; line-height: 1.6; font-size: 14px; }
 }
