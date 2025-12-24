@@ -1,0 +1,271 @@
+/* =========================================
+   1. UTAMA (BACKGROUND GRID PINK & RESET)
+========================================= */
+body {
+    /* 1. Warna Dasar Pink Lembut */
+    background-color: #ffe6ed;
+    
+    /* 2. Membuat Motif Grid (Garis-garis Putih) */
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.6) 2px, transparent 2px), /* Garis Horizontal */
+        linear-gradient(90deg, rgba(255, 255, 255, 0.6) 2px, transparent 2px); /* Garis Vertikal */
+    
+    /* 3. Ukuran Kotak Grid (Bisa diubah, misal 30px atau 50px) */
+    background-size: 40px 40px;
+    
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    
+    /* FIX SCROLL: Kunci tinggi layar */
+    height: 100vh; 
+    overflow: hidden; 
+    position: relative;
+}
+
+/* --- Efek "Hidup": Floating Bokeh (Opsional) --- */
+/* Saya biarkan tetap ada tapi lebih transparan agar tidak tabrakan sama Grid */
+body::before,
+body::after {
+    content: '';
+    position: fixed; 
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    /* Ganti jadi Putih yang sangat tipis agar menyatu dengan grid */
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    z-index: -1; 
+    filter: blur(10px);
+    animation: float 15s infinite ease-in-out;
+}
+/* Lingkaran 1 */
+body::before {
+    top: -10%;
+    left: -10%;
+}
+
+/* Lingkaran 2 */
+body::after {
+    bottom: -10%;
+    right: -10%;
+    width: 250px;
+    height: 250px;
+    animation-delay: -7s;
+    background: rgba(255, 192, 203, 0.4);
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -50px) rotate(10deg); }
+    66% { transform: translate(-20px, 20px) rotate(-5deg); }
+}
+
+/* =========================================
+   3. LAYOUT WRAPPER (UNTUK HP & PC)
+========================================= */
+.desktop-grid-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* Pastikan wrapper mengambil tinggi penuh agar bisa di-center */
+    height: 100%;
+    align-items: center; /* Center Vertikal */
+}
+
+/* Sidebar default disembunyikan (untuk HP) */
+.sidebar-content {
+    display: none;
+}
+
+/* =========================================
+   4. KONTAINER UTAMA (BAGIAN TENGAH)
+========================================= */
+.container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    
+    /* FIX SCROLL: Jika konten HP panjang, scroll di dalam container saja */
+    max-height: 100vh; 
+    overflow-y: auto; 
+    
+    /* Sembunyikan scrollbar agar rapi */
+    scrollbar-width: none;  /* Firefox */
+}
+.container::-webkit-scrollbar { 
+    display: none; /* Chrome/Safari */
+}
+
+/* --- Styling Profil & Teks --- */
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    margin-bottom: 15px;
+    background-color: white;
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+p {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* --- Styling Tombol Link --- */
+.link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+    /* Tambahan padding bawah agar tombol terakhir tidak kepotong */
+    padding-bottom: 40px; 
+}
+
+.link-btn {
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    padding: 18px 25px;
+    border-radius: 50px;
+    border: 2px solid black;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 4px 5px 0px rgba(0,0,0,0.8);
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0; 
+    transform: translateY(20px); 
+}
+
+.link-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 7px 0px rgba(0,0,0,0.8);
+}
+
+.link-btn:active {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 2px 3px 0px rgba(0,0,0,0.8);
+}
+
+.dots {
+    font-size: 20px;
+    color: #333;
+}
+
+.footer {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #777;
+    font-weight: 500;
+    padding-bottom: 20px;
+}
+
+/* --- Animasi Fade In (JS) --- */
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =======================================================
+   5. MEDIA QUERY (KHUSUS DESKTOP / LAPTOP > 992px)
+======================================================= */
+@media (min-width: 992px) {
+
+    /* Mengaktifkan Grid 3 Kolom */
+    .desktop-grid-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 480px 1fr; /* Kiri - Tengah - Kanan */
+        gap: 40px; 
+        width: 90%; 
+        max-width: 1200px;
+    }
+
+    /* Agar container tengah tidak full layar tingginya di desktop (biar rapi) */
+    .container {
+        max-height: 90vh; /* Maksimal 90% tinggi layar */
+        border-radius: 20px; /* Opsional: sedikit melengkung */
+        /* Hapus background container jika ingin transparan, 
+           atau beri background tipis jika ingin seperti kartu */
+    }
+
+    /* Memunculkan Sidebar Kiri & Kanan */
+    .sidebar-content {
+        display: block;
+        background: rgba(255, 255, 255, 0.4);
+        padding: 25px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px); 
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 30px rgba(214, 51, 132, 0.1); 
+        
+        /* Animasi masuk sidebar */
+        animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .sidebar-content h3 {
+        margin-top: 0;
+        color: #d63384;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .mini-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mini-gallery img {
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    
+    .mini-gallery img:hover {
+        transform: scale(1.05);
+    }
+
+    .info-card ul {
+        padding-left: 20px;
+        color: #444;
+        font-size: 14px;
+    }
+    
+    .info-card li { margin-bottom: 8px; }
+    
+    .info-card p {
+        color: #444;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+}
